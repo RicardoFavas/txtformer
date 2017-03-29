@@ -1,0 +1,281 @@
+html, body {
+  border: 0;
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background-color: #BFCCD6;
+}
+
+.appContent {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  min-width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.leftSideBar {
+  order: 1; flex: 1;
+  display: flex; flex-direction: column;
+  height: 100%;
+  min-width: 240px;
+  max-width: 240px;
+}
+
+  .trxSelectionLabel {
+    flex: 0;
+    box-sizing: border-box;
+
+    width: 100%;
+    text-align: center;
+
+    padding-top: 20px;
+    min-height: 40px;
+
+    font-weight: bold;
+    font-size: 18px;
+    font-family: "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace;
+  }
+  .trxSearchBox {
+    background-color: white;
+    border: solid 1px black;
+  }
+  .trxSelection {
+    flex: 2;
+    min-height: 50%;
+    overflow-y: scroll;
+    min-height: 0px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 120px 120px;
+    background-image: linear-gradient(rgba(255,255,255,.80), rgba(255,255,255,.95)), url(/../resources/arrow-down.svg);
+    background-color: white;
+    border: solid 1px black;
+  }
+  .trxList {
+    flex: 1;
+    margin-top: 4px;
+    min-height: 50%;
+    overflow-y: scroll;
+    background-color: white;
+    border: solid 1px black;
+  }
+
+
+.inputContainer {
+  display: flex; flex-direction: column;
+  flex: 1; order: 2;
+  box-sizing: border-box;
+  margin: 10px;
+}
+.inputContainer header {
+  box-sizing: border-box;
+
+  min-height: 40px;
+
+  display: flex; flex-direction: row;
+  align-items: center;
+}
+.inputContainer header span {
+  margin: 5px;
+}
+.inputContainer textarea {
+  flex: 1;
+  box-sizing: border-box;
+  resize: none;
+}
+.inputContainer footer {
+  display: flex; flex-direction: row-reverse;
+  align-items: center;
+  min-height: 24px;
+  background-color: black;
+  margin-top: 10px;
+  color: white;
+  font-size: 12px;
+  font-family: "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace;
+}
+.inputContainer footer label {
+  margin-right: 10px;
+}
+
+
+
+
+
+
+
+.outputContainer {
+  display: flex; flex-direction: column;
+  flex: 1; order: 2;
+  box-sizing: border-box;
+  margin: 10px;
+}
+.outputContainer header {
+  box-sizing: border-box;
+  min-height: 40px;
+  display: flex; flex-direction: row;
+  align-items: center;
+}
+.outputContainer header span {
+  margin: 5px;
+}
+.outputContainer textarea {
+  flex: 1;
+  box-sizing: border-box;
+  resize: none;
+}
+.output {
+  box-sizing: border-box;
+  border: solid 1px black;
+}
+
+.outputContainer footer {
+  display: flex; flex-direction: row-reverse;
+  align-items: center;
+  min-height: 24px;
+  margin-top: 10px;
+  background-color: black;
+  color: white;
+  font-size: 12px;
+  font-family: "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace;
+}
+.outputContainer footer label {
+  margin-right: 10px;
+}
+
+
+
+
+
+.trx {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: -30px;
+  height: 35px;
+}
+.trx>div {
+  margin: 6px;
+}
+.trxLabel {
+  flex: 1;
+  font-weight: bold;
+}
+.trx .trxHint {
+  font-size: 12px;
+}
+.trx .trxAdd {
+  cursor: pointer;
+  font-size: 16px;
+}
+.trx .trxRemove {
+  cursor: pointer;
+  font-size: 16px;
+}
+.trx .premoteDemote {
+  display: flex;
+  flex-direction: column;
+}
+  .trx .premoteDemote .trxPremote {
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .trx .premoteDemote .trxDemote {
+    cursor: pointer;
+    font-size: 14px;
+  }
+.trx .trxOptions {
+  cursor: pointer;
+  font-size: 14px;
+}
+.trxOptionsDialog {
+
+}
+
+
+
+
+
+.upload {
+  font-size: 20px;
+  cursor: pointer;
+}
+.wrapInput {
+  font-size: 20px;
+  cursor: pointer;
+}
+.viewInput {
+  font-size: 20px;
+  cursor: pointer;
+}
+.inputLabel {
+  flex:1;
+  font-weight: bold;
+  font-size: 20px;
+  font-family: "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace;
+}
+.input {
+  box-sizing: border-box;
+  border: solid 1px black;
+}
+
+.wrapOutput {
+  font-size: 20px;
+  cursor: pointer;
+}
+.viewOutput {
+  font-size: 20px;
+  cursor: pointer;
+}
+.download {
+  font-size: 20px;
+  cursor: pointer;
+}
+.copy {
+  font-size: 20px;
+  cursor: pointer;
+}
+.outputLabel {
+  flex: 1;
+  font-weight: bold;
+  font-size: 20px;
+  font-family: "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace;
+}
+
+
+
+.rightSideBar {
+  flex: 1;
+  order: 4;
+  min-width: 200px;
+  max-width: 200px;
+  box-sizing: border-box;
+  border: solid 2px black;
+}
+
+
+
+
+
+
+
+
+
+
+.apply {
+  width: 80px;
+  height: 30px;
+}
+.cancel {
+  width: 80px;
+  height: 30px;
+}
+.tooltip {
+  width: 200px;
+  font-size: 12px;
+  font-family: "Lucida Console", "Lucida Sans Typewriter", monaco, "Bitstream Vera Sans Mono", monospace;
+}
