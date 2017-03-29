@@ -1,13 +1,12 @@
 import React from 'react';
 import DropZone from 'react-dropzone';
 import _ from 'lodash';
+import { InputGroup, Position, Classes, EditableText, Tag } from "@blueprintjs/core";
 
 import globals from './../globals.js';
 import Trx from "./Trx.jsx";
-
 import './App.css';
 
-import { InputGroup, Position, Classes, EditableText, Tag } from "@blueprintjs/core";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -30,7 +29,7 @@ export default class App extends React.Component {
   }
 
   handleUploadFile(newInput){
-    this.state.input = newInput;
+    this.state.input = newInput; //hack
     this.updateOutput();
   }
 
@@ -48,12 +47,12 @@ export default class App extends React.Component {
     filterText = filterText.trim().toLowerCase();
     let items = this.allTrx.filter(
       v => {
-         let tags = [v.label];
-         if (_.isArray(v.tags))
-           tags = tags.concat(v.tags);
-         return tags.some(tag => tag.toLowerCase().indexOf(filterText) !== -1);
-       }
-     );
+        let tags = [v.label];
+        if (_.isArray(v.tags))
+        tags = tags.concat(v.tags);
+        return tags.some(tag => tag.toLowerCase().indexOf(filterText) !== -1);
+      }
+    );
     this.setState({'filterText':filterText,'filteredTrxList':items});
   }
 
@@ -72,7 +71,7 @@ export default class App extends React.Component {
   }
   demoteSelectedTrx(index){
     if (index <= 0)
-      return;
+    return;
     let trx = this.state.selectedTrxList[index];
     this.state.selectedTrxList.splice(index,1);
     this.state.selectedTrxList.splice(index-1,0,trx);
@@ -81,7 +80,7 @@ export default class App extends React.Component {
   }
   premoteSelectedTrx(index){
     if (index+1 >= this.state.selectedTrxList.length)
-      return;
+    return;
     let trx = this.state.selectedTrxList[index];
     this.state.selectedTrxList.splice(index,1);
     this.state.selectedTrxList.splice(index+1,0,trx);
@@ -96,17 +95,17 @@ export default class App extends React.Component {
   }
 
   hanbdleClickDownload(filename, data) {
-      var blob = new Blob([data], {type: 'text/csv'});
-      if(window.navigator.msSaveOrOpenBlob) {
-          window.navigator.msSaveBlob(blob, filename);
-      } else {
-          var elem = window.document.createElement('a');
-          elem.href = window.URL.createObjectURL(blob);
-          elem.download = filename;
-          document.body.appendChild(elem);
-          elem.click();
-          document.body.removeChild(elem);
-      }
+    var blob = new Blob([data], {type: 'text/csv'});
+    if(window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveBlob(blob, filename);
+    } else {
+      var elem = window.document.createElement('a');
+      elem.href = window.URL.createObjectURL(blob);
+      elem.download = filename;
+      document.body.appendChild(elem);
+      elem.click();
+      document.body.removeChild(elem);
+    }
   }
   handleClockCopy(text){
     let dummy = document.createElement("input");
@@ -119,7 +118,7 @@ export default class App extends React.Component {
   }
   handleDropFile(acceptedFiles, rejectedFiles) {
     if (acceptedFiles.length == 0)
-      return;
+    return;
     let reader = new FileReader();
     reader.onload = (e) => {
       let text = reader.result;
@@ -133,9 +132,9 @@ export default class App extends React.Component {
     let input = this.state.input;
     let output = this.state.output;
     if (this.state.input.length >= 200000)
-      input = this.state.input.substring(0,200000);
+    input = this.state.input.substring(0,200000);
     if (this.state.output.length >= 200000)
-      output = this.state.output.substring(0,200000);
+    output = this.state.output.substring(0,200000);
 
     return (
       <div className="appContent">

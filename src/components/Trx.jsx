@@ -3,18 +3,7 @@ import ReactTooltip from 'react-tooltip';
 import ReactModal from 'react-modal';
 import _ from 'lodash';
 
-import {
-    Button,
-    Menu,
-    MenuItem,
-    MenuDivider,
-    Popover,
-    Position,
-    Tooltip,
-    Dialog,
-    Intent
-} from "@blueprintjs/core";
-
+import { Button, Menu, MenuItem, MenuDivider, Popover, Position, Tooltip, Dialog, Intent } from "@blueprintjs/core";
 
 export default class Trx extends React.Component {
   constructor(props) {
@@ -28,35 +17,35 @@ export default class Trx extends React.Component {
     let plusBtn, minusBtn, premoteBtn, demoteBtn, optionsBtn, hintBtn;
 
     if (!_.isNil(this.props.addSelectedTrx))
-      plusBtn = (<span className="trxAdd pt-icon-standard pt-icon-add" key={0} src="./../resources/plus.png" onClick={e => this.props.addSelectedTrx(this.props.label)}/>);
+    plusBtn = (<span className="trxAdd pt-icon-standard pt-icon-add" key={0} src="./../resources/plus.png" onClick={e => this.props.addSelectedTrx(this.props.label)}/>);
 
-      if (!_.isNil(this.props.removeSelectedTrx))
-        minusBtn = <span className="trxRemove pt-icon-standard pt-icon-delete" src="./../resources/minus.png" onClick={e => this.props.removeSelectedTrx(this.props.index)}/>;
+    if (!_.isNil(this.props.removeSelectedTrx))
+    minusBtn = <span className="trxRemove pt-icon-standard pt-icon-delete" src="./../resources/minus.png" onClick={e => this.props.removeSelectedTrx(this.props.index)}/>;
 
-      if (!_.isNil(this.props.demoteSelectedTrx))
-        premoteBtn = <span className="trxDemote pt-icon-standard pt-icon-caret-up"  onClick={e=>this.props.demoteSelectedTrx(this.props.index)}/>;
+    if (!_.isNil(this.props.demoteSelectedTrx))
+    premoteBtn = <span className="trxDemote pt-icon-standard pt-icon-caret-up"  onClick={e=>this.props.demoteSelectedTrx(this.props.index)}/>;
 
-      if (!_.isNil(this.props.premoteSelectedTrx))
-        demoteBtn = <span className="trxPremote pt-icon-standard pt-icon-caret-down" src="./../resources/down.png" onClick={e => this.props.premoteSelectedTrx(this.props.index)}/>;
+    if (!_.isNil(this.props.premoteSelectedTrx))
+    demoteBtn = <span className="trxPremote pt-icon-standard pt-icon-caret-down" src="./../resources/down.png" onClick={e => this.props.premoteSelectedTrx(this.props.index)}/>;
 
-      if (!_.isNil(this.props.optionsDialog)){
-        let optionsDialogId = _.uniqueId();
-        optionsBtn = (
-          <span className="trxOptions pt-icon-standard pt-icon-cog"  onClick={e => {this.setState({modalIsOpen:true});}}/>
-        );
-      }
+    if (!_.isNil(this.props.optionsDialog)){
+      let optionsDialogId = _.uniqueId();
+      optionsBtn = (
+        <span className="trxOptions pt-icon-standard pt-icon-cog"  onClick={e => {this.setState({modalIsOpen:true});}}/>
+      );
+    }
 
-      if (!_.isNil(this.props.hint) ){
-        let hintId = _.uniqueId();
-        hintBtn =(
-          <Tooltip
-             content={this.props.hint}
-             inline={false}
-             position={Position.RIGHT}
-             intent={Intent.INFO}
-           >
-              <span className="trxHint pt-icon-standard pt-icon-help"/>
-            </Tooltip>
+    if (!_.isNil(this.props.hint) ){
+      let hintId = _.uniqueId();
+      hintBtn =(
+        <Tooltip
+          content={this.props.hint}
+          inline={false}
+          position={Position.RIGHT}
+          intent={Intent.INFO}
+          >
+            <span className="trxHint pt-icon-standard pt-icon-help"/>
+          </Tooltip>
         );
       }
 
