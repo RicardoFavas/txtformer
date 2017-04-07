@@ -8,7 +8,7 @@ import 'antd/dist/antd.less';
 
 import App from './src/components/App.jsx';
 
-
+//teste
 ReactDOM.render(
     <LocaleProvider locale={enUS}>
       <App/>
