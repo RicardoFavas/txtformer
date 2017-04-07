@@ -420,9 +420,9 @@ export default {
         }
     },
     {
-      'label':'Costume Script',
+      'label':'Custom Script',
       'tags':['javascript','ecmascript'],
-      'hint':'Costume Script in Javasscript',
+      'hint':'Custom Script in Javasscript',
       'options':{'costume':'var output = input;\nreturn output;'},
       'optionsDialog':
         (options) => {
@@ -702,7 +702,7 @@ export default {
     {
       'label':'Hash',
       'tags':['javascript','digest','md5','sha','md4'],
-      'hint':'Not implemented yet',
+      'hint':'Digest the input in various algorithms',
       'options':{'function':'javascript'},
       'optionsDialog': options => {
         return (
@@ -716,14 +716,14 @@ export default {
               <Select.Option value={"javascript"}>Javascript</Select.Option>
               <Select.Option value={"md4"}>MD4 (128-bit)</Select.Option>
               <Select.Option value={"md5"} >MD5 (128-bit)</Select.Option>
-              <Select.Option value={"sha1"} >SHA1 (160-bit)</Select.Option>
-              <Select.Option value={"sha-256"}>SHA-256 (256-bit)</Select.Option>
-              <Select.Option value={"sha-512"}>SHA-512 (512-bit)</Select.Option>
             </Select>
           </Form.Item>
         );
       },
       'process': (input,options) => {
+        //              <Select.Option value={"sha1"} >SHA1 (160-bit)</Select.Option>
+        //              <Select.Option value={"sha-256"}>SHA-256 (256-bit)</Select.Option>
+        //              <Select.Option value={"sha-512"}>SHA-512 (512-bit)</Select.Option>
         if (options.function === 'md5')
           return hash_md5(input);
         if (options.function === 'sha1')
