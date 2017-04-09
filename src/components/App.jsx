@@ -228,7 +228,7 @@ export default class App extends React.Component {
                   <label className="outputLabel">Output</label>
                   <Icon type="download" className="download" onClick={e => this.hanbdleClickDownload(_.now()+'.txt',this.state.output)}/>
                   <Icon type="copy" className="copy" onClick={e => this.handleClockCopy(this.state.output) }/>
-                  <Icon type="swap" style={{'backgroundColor':'black'}} className="wrapOutput" onClick={e => this.setState({'wrapOutput':{'pre-wrap':'pre','pre':'pre-wrap'}[this.state.wrapOutput]})}/>
+                  <Icon type="swap" className="wrapOutput" onClick={e => this.setState({'wrapOutput':{'pre-wrap':'pre','pre':'pre-wrap'}[this.state.wrapOutput]})}/>
                   <Icon type={this.state.viewOutput?"eye":"eye-o"} className="viewOutput" onClick={e => this.setState({'viewOutput':!this.state.viewOutput})}/>
                 </header>
                 {
