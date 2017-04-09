@@ -10,7 +10,7 @@ import { Menu, Icon } from 'antd';
 import { Affix, Button } from 'antd';
 import { DragDropContext } from 'react-dnd';
 import { DragSource } from 'react-dnd';
-import { Select } from 'antd';
+import { Message, Select } from 'antd';
 
 
 export default class MyOutput extends React.Component {
@@ -35,7 +35,8 @@ export default class MyOutput extends React.Component {
           document.body.removeChild(elem);
       }
   }
-  handleClockCopy(text){
+  handleClickCopy(text){
+    console.log(text);
     let dummy = document.createElement("input");
     document.body.appendChild(dummy);
     dummy.setAttribute("id", "dummy_id");
@@ -43,6 +44,7 @@ export default class MyOutput extends React.Component {
     dummy.select();
     document.execCommand("copy");
     document.body.removeChild(dummy);
+    Message.success('Text has been copied to clipboard');
   }
 
   render() {
@@ -50,8 +52,8 @@ export default class MyOutput extends React.Component {
       <div className="outputContainer">
         <header>
           <label className="outputLabel">Output</label>
-          <Icon type="download" className="download" onClick={e => this.hanbdleClickDownload(_.now()+'.txt',this.state.output)}/>
-          <Icon type="copy" className="copy" onClick={e => this.handleClockCopy(this.state.output) }/>
+          <Icon type="download" className="download" onClick={e => this.hanbdleClickDownload(_.now()+'.txt',this.props.text)}/>
+          <Icon type="copy" className="copy" onClick={e => this.handleClickCopy(this.props.text) }/>
           <Icon type="swap" className="wrapOutput" onClick={e => this.setState({'wrap':{'pre-wrap':'pre','pre':'pre-wrap'}[this.state.wrap]})}/>
           <Icon type={this.state.view?"eye":"eye-o"} className="viewOutput" onClick={e => this.setState({'view':!this.state.view})}/>
         </header>
