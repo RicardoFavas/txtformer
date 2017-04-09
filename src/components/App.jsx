@@ -196,10 +196,8 @@ export default class App extends React.Component {
               }
             </ul>
           </div>
-
           <div className="content">
             <div className="contentHeader">
-              
             </div>
             <div className="contentContainer">
               <div className="inputContainer">
@@ -213,9 +211,13 @@ export default class App extends React.Component {
                     <Icon type="upload" className="upload"/>
                   </Upload>
                   <Icon type="swap" className="wrapInput" onClick={e => this.setState({'wrapInput':{'pre-wrap':'pre','pre':'pre-wrap'}[this.state.wrapInput]})}/>
-                  <Icon type="eye" className="viewInput" onClick={e => this.setState({'viewInput':!this.state.viewInput})}/>
+                  <Icon type={this.state.viewInput?"eye":"eye-o"} className="viewInput" onClick={e => this.setState({'viewInput':!this.state.viewInput})}/>
                 </header>
-                { this.state.viewInput ? <textarea className="input" style={{'viewInput':!this.state.viewInput}} style={{'whiteSpace':this.state.wrapInput}} value={input} placeholder="Your input goes here" onChange={e => {this.state.input = e.target.value; this.updateOutput()}}/> : null }
+                {
+                  this.state.viewInput ?
+                  <textarea className="input" style={{'viewInput':!this.state.viewInput}} style={{'whiteSpace':this.state.wrapInput}} value={input} placeholder="Your input goes here" onChange={e => {this.state.input = e.target.value; this.updateOutput()}}/>
+                  : <div className="nopreview"></div>
+                }
                 <footer className="">
                   <label>{'length: '+this.state.input.length}</label>
                   <label>{'lines: '+this.state.input.split('\n').length}</label>
@@ -226,10 +228,14 @@ export default class App extends React.Component {
                   <label className="outputLabel">Output</label>
                   <Icon type="download" className="download" onClick={e => this.hanbdleClickDownload(_.now()+'.txt',this.state.output)}/>
                   <Icon type="copy" className="copy" onClick={e => this.handleClockCopy(this.state.output) }/>
-                  <Icon type="swap" className="wrapOutput" onClick={e => this.setState({'wrapOutput':{'pre-wrap':'pre','pre':'pre-wrap'}[this.state.wrapOutput]})}/>
-                  <Icon type="eye" className="viewOutput" onClick={e => this.setState({'viewOutput':!this.state.viewOutput})}/>
+                  <Icon type="swap" style={{'backgroundColor':'black'}} className="wrapOutput" onClick={e => this.setState({'wrapOutput':{'pre-wrap':'pre','pre':'pre-wrap'}[this.state.wrapOutput]})}/>
+                  <Icon type={this.state.viewOutput?"eye":"eye-o"} className="viewOutput" onClick={e => this.setState({'viewOutput':!this.state.viewOutput})}/>
                 </header>
-                {this.state.viewOutput ? <textarea className="output" style={{'whiteSpace':this.state.wrapOutput}} value={output} placeholder="and this is the result"/> : null}
+                {
+                  this.state.viewOutput ?
+                  <textarea className="output" style={{'whiteSpace':this.state.wrapOutput}} value={output} placeholder="and this is the result"/>
+                  : <div className="nopreview"></div>
+                }
                 <footer className="">
                   <label>{'length: '+this.state.output.length}</label>
                   <label>{'lines: '+this.state.output.split('\n').length}</label>
