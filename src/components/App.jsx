@@ -15,6 +15,9 @@ import { Select } from 'antd';
 
 import globals from './../globals.js';
 import Trx from "./Trx.jsx";
+import MyInput from "./MyInput.jsx";
+import MyOutput from "./MyOutput.jsx";
+import MyContent from "./MyContent.jsx";
 
 import './App.less';
 
@@ -36,26 +39,6 @@ export default class App extends React.Component {
     }
     this.allTrx = globals.Transformations.filter(trx => !_.isNil(trx.process)).sort((a,b)=>a.label>b.label?1:-1);
     this.state.filteredTrxList = this.allTrx;
-  }
-
-  handleUploadFile(file){
-    let reader = new FileReader();
-    reader.onload = (e) => {
-      let text = reader.result;
-      this.setState({'input':text});
-      this.updateOutput();
-    }
-    reader.readAsText(file, "UTF-8");
-  }
-
-  updateOutput(){
-    let output = this.state.input;
-    this.state.selectedTrxList.forEach(
-      (trx) => {
-        output = trx.process(output,trx.options);
-      }
-    );
-    this.setState({'output':output});
   }
 
   updateFilteredTrxList(filterText){
@@ -94,6 +77,10 @@ export default class App extends React.Component {
     this.setState({'selectedTrxList':this.state.selectedTrxList});
     this.updateOutput();
   }
+  clearSelectedTrx(){
+    this.setState({'selectedTrxList':[]});
+    this.updateOutput();
+  }
   premoteSelectedTrx(index){
     if (index+1 >= this.state.selectedTrxList.length)
       return;
@@ -109,28 +96,8 @@ export default class App extends React.Component {
     this.setState({'selectedTrxList':this.state.selectedTrxList});
     this.updateOutput();
   }
-
-  hanbdleClickDownload(filename, data) {
-      var blob = new Blob([data], {type: 'text/csv'});
-      if(window.navigator.msSaveOrOpenBlob) {
-          window.navigator.msSaveBlob(blob, filename);
-      } else {
-          var elem = window.document.createElement('a');
-          elem.href = window.URL.createObjectURL(blob);
-          elem.download = filename;
-          document.body.appendChild(elem);
-          elem.click();
-          document.body.removeChild(elem);
-      }
-  }
-  handleClockCopy(text){
-    let dummy = document.createElement("input");
-    document.body.appendChild(dummy);
-    dummy.setAttribute("id", "dummy_id");
-    document.getElementById("dummy_id").value = text;
-    dummy.select();
-    document.execCommand("copy");
-    document.body.removeChild(dummy);
+  updateOutput(){
+    this.myContent.updateOutput();
   }
 
   render() {
@@ -176,7 +143,7 @@ export default class App extends React.Component {
                       Set code
                     </Menu.Item>
                     <Menu.Item key={'clear'}>
-                      Clear
+                      <div onClick={ e => {this.clearSelectedTrx()}}>Clear</div>
                     </Menu.Item>
                   </Menu>
               }>
@@ -196,53 +163,10 @@ export default class App extends React.Component {
               }
             </ul>
           </div>
-          <div className="content">
-            <div className="contentHeader">
-            </div>
-            <div className="contentContainer">
-              <div className="inputContainer">
-                <header>
-                  <label className="inputLabel">Input</label>
-                  <Upload
-                    showUploadList={false}
-                    action={''}
-                    customRequest={e => this.handleUploadFile(e.file)}
-                  >
-                    <Icon type="upload" className="upload"/>
-                  </Upload>
-                  <Icon type="swap" className="wrapInput" onClick={e => this.setState({'wrapInput':{'pre-wrap':'pre','pre':'pre-wrap'}[this.state.wrapInput]})}/>
-                  <Icon type={this.state.viewInput?"eye":"eye-o"} className="viewInput" onClick={e => this.setState({'viewInput':!this.state.viewInput})}/>
-                </header>
-                {
-                  this.state.viewInput ?
-                  <textarea className="input" style={{'viewInput':!this.state.viewInput}} style={{'whiteSpace':this.state.wrapInput}} value={input} placeholder="Your input goes here" onChange={e => {this.state.input = e.target.value; this.updateOutput()}}/>
-                  : <div className="nopreview"></div>
-                }
-                <footer className="">
-                  <label>{'length: '+this.state.input.length}</label>
-                  <label>{'lines: '+this.state.input.split('\n').length}</label>
-                </footer>
-              </div>
-              <div className="outputContainer">
-                <header>
-                  <label className="outputLabel">Output</label>
-                  <Icon type="download" className="download" onClick={e => this.hanbdleClickDownload(_.now()+'.txt',this.state.output)}/>
-                  <Icon type="copy" className="copy" onClick={e => this.handleClockCopy(this.state.output) }/>
-                  <Icon type="swap" className="wrapOutput" onClick={e => this.setState({'wrapOutput':{'pre-wrap':'pre','pre':'pre-wrap'}[this.state.wrapOutput]})}/>
-                  <Icon type={this.state.viewOutput?"eye":"eye-o"} className="viewOutput" onClick={e => this.setState({'viewOutput':!this.state.viewOutput})}/>
-                </header>
-                {
-                  this.state.viewOutput ?
-                  <textarea className="output" style={{'whiteSpace':this.state.wrapOutput}} value={output} placeholder="and this is the result"/>
-                  : <div className="nopreview"></div>
-                }
-                <footer className="">
-                  <label>{'length: '+this.state.output.length}</label>
-                  <label>{'lines: '+this.state.output.split('\n').length}</label>
-                </footer>
-              </div>
-            </div>
-          </div>
+          <MyContent
+            selectedTrxList={this.state.selectedTrxList}
+            ref={instance => { this.myContent = instance; }}
+          />
 
         </div>
     );

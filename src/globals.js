@@ -520,98 +520,105 @@ export default {
     },
     {
       'label':'Binary',
-      'tags':[],
-      'options':{'wordSize':'16bit'},
+      'tags':['hexadecimal','octal','decimal'],
+      'options':{
+        'mode':'binary',
+        'wordSize':'16bit',
+        'separator':" "
+      },
       'optionsDialog':
         (options) => {
           return (
-            <Form.Item label="Word size" layout="inline">
-              <Radio.Group defaultValue={options.wordSize} onChange={e => options.wordSize = e.target.value}>
-                <Radio  value={'16bit'}>16bit</Radio>
-                <Radio  value={'32bit'}>32bit</Radio>
-              </Radio.Group>
-            </Form.Item>
+            <div>
+              <Form.Item label="Output mode" layout="inline">
+                <Radio.Group defaultValue={options.mode} onChange={e => options.mode = e.target.value}>
+                  <Radio  value={'binary'}>Binary</Radio>
+                  <Radio  value={'octal'}>Octal</Radio>
+                  <Radio  value={'decimal'}>Decimal</Radio>
+                  <Radio  value={'hexa'}>Hexadecimal</Radio>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item label="Word size" layout="inline">
+                <Radio.Group defaultValue={options.wordSize} onChange={e => options.wordSize = e.target.value}>
+                  <Radio  value={'16bit'}>16bit</Radio>
+                  <Radio  value={'32bit'}>32bit</Radio>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item label="Separator" layout="inline">
+                <Input defaultValue={options.separator} onChange={e => options.separator = e.target.value}/>
+              </Form.Item>
+            </div>
           )
         },
       'process': (input,options) => {
-        let wordSize = 32;
-        if (options.wordSize === "16bit")
-          wordSize = 16;
-        else if (options.wordSize === "32bit")
-          wordSize = 32;
-        return strToArray(input).map(
-          e => {
-            let bin = "00000000000000000000000000000000";
-            e = e.charCodeAt(0);
-            bin += e.toString(2);
-            bin = bin.slice(-wordSize);
-            return bin;
-          }
-        ).join(" ");
+        if ( options.mode === 'binary'){
+          let wordSize = 32;
+          if (options.wordSize === "16bit")
+            wordSize = 16;
+          else if (options.wordSize === "32bit")
+            wordSize = 32;
+          return strToArray(input).map(
+            e => {
+              let bin = e.charCodeAt(0).toString(2);
+              return _.padStart(bin,wordSize,"0")
+            }
+          ).join(options.separator)
+        }
+        else if ( options.mode === 'octal'){
+          let wordSize = 2;
+          if (options.wordSize === "16bit")
+            wordSize = 2;
+          else if (options.wordSize === "32bit")
+            wordSize = 4;
+          return strToArray(input).map(
+            e => {
+              let bin = e.charCodeAt(0).toString(8);
+              return _.padStart(bin,wordSize,"0");
+            }
+          ).join(options.separator);
+        }
+        else if ( options.mode === 'decimal'){
+          let wordSize = 4;
+          if (options.wordSize === "16bit")
+            wordSize = 3;
+          else if (options.wordSize === "32bit")
+            wordSize = 5;
+          return strToArray(input).map(
+            e => {
+              let bin = e.charCodeAt(0).toString(10);
+              return _.padStart(bin,wordSize,"0");
+            }
+          ).join(options.separator);
+        }
+        else if ( options.mode === 'hexa'){
+          let wordSize = 4;
+          if (options.wordSize === "16bit")
+            wordSize = 4;
+          else if (options.wordSize === "32bit")
+            wordSize = 5;
+          return strToArray(input).map(
+            e => {
+              let bin = e.charCodeAt(0).toString();
+              return _.padStart(bin,wordSize,"0")
+            }
+          ).join(options.separator);
+        }
       }
     },
     {
-      'label':'Hexadecimal',
+      'label':'Unicode',
       'tags':[],
-      'options':{'wordSize':'16bit'},
-      'optionsDialog':
-        (options) => {
-          return (
-            <Form.Item label="Word size" layout="inline">
-              <Radio.Group defaultValue={options.wordSize} onChange={e => options.wordSize = e.target.value}>
-                <Radio  value={'16bit'}>16bit</Radio>
-                <Radio  value={'32bit'}>32bit</Radio>
-              </Radio.Group>
-            </Form.Item>
-          )
-        },
+      'hint':'Converts the document to unicode',
+      'options':{},
       'process': (input,options) => {
-        let wordSize = 4;
-        if (options.wordSize === "16bit")
-          wordSize = 2;
-        else if (options.wordSize === "32bit")
-          wordSize = 4;
-        return strToArray(input).map(
-          e => {
-            let bin = "0000";
-            e = e.charCodeAt(0);
-            bin += e.toString(16);
-            bin = bin.slice(-wordSize);
-            return bin;
-          }
-        ).join(" ");
-      }
-    },
-    {
-      'label':'Decimal',
-      'tags':[],
-      'options':{'wordSize':'16bit'},
-      'optionsDialog':
-        (options) => {
-          return (
-            <Form.Item label="Word size" layout="inline">
-              <Radio.Group defaultValue={options.wordSize} onChange={e => options.wordSize = e.target.value}>
-                <Radio  value={'16bit'}>16bit</Radio>
-                <Radio  value={'32bit'}>32bit</Radio>
-              </Radio.Group>
-            </Form.Item>
-          )
-        },
-      'process': (input,options) => {
-        let wordSize = 4;
-        if (options.wordSize === "16bit")
-          wordSize = 4;
-        else if (options.wordSize === "32bit")
-          wordSize = 5;
-        return strToArray(input).map(
-          e => {
-            let bin = "00000";
-            e = e.charCodeAt(0);
-            bin += e.toString();
-            bin = bin.slice(-wordSize);
-            return bin;
-          }
-        ).join(" ");
+        var unicodeString = '';
+        for (let i=0; i < input.length; i++) {
+          let code = input.charCodeAt(i).toString(16).toUpperCase();
+          code = _.padStart(code,4,"0");
+          code = '\\u' + code;
+          unicodeString += code;
+        }
+        return unicodeString;
       }
     },
     {
