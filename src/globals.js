@@ -201,6 +201,32 @@ export default {
       }
     },
     {
+      'label':'Match',
+      'tags':[],
+      'hint':'Preserve matched values',
+      'options' : {'pattern':'', 'ignoreCase':false },
+      'optionsDialog': (options) => {
+        return (
+          <div>
+            <Form.Item label="Find what">
+              <Input defaultValue={options.pattern} onChange={e => options.pattern = e.target.value}/>
+            </Form.Item>
+            <Checkbox defaultChecked={options.ignoreCase} onChange={e => options.ignoreCase = e.target.checked}>Ignore case</Checkbox>
+          </div>
+        );
+      },
+      'process': (input,options) => {
+        let flags = 'g';
+        if (options.ignoreCase)
+          flags += 'i';
+        let regex = new RegExp(options.pattern,flags)
+        let matches = input.match(regex);
+        if (matches == null)
+          return '';
+        return matches.join('\n');
+      }
+    },
+    {
       'label':'Remove Duplicated Spaces',
       'tags':[],
       'hint': (<div>Removes duplicated spaces from the document</div>),
@@ -705,11 +731,7 @@ export default {
         let zindex = options.zeroIndex ? 0 : 1;
         let chrs = slicesToArray(options.slices);
         return input.split('\n').map(
-          line => {
-            let out = "";
-            chrs.forEach(v => out += line.charAt(v-zindex))
-            return out;
-          }
+          line => chrs.map(v => line.charAt(v-zindex)).join("")
         ).join("\n")
       }
     },
