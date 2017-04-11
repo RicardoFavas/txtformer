@@ -27,15 +27,7 @@ export default class App extends React.Component {
     this.state = {
       filterText:'',
       filteredTrxList: [],
-      selectedTrxList: [],
-      input: '',
-      output: '',
-      viewInput: true,
-      viewOutput: true,
-      wrapInput: 'pre',
-      wrapOutput: 'pre',
-      inputPage: 1,
-      outputPage: 1
+      selectedTrxList: []
     }
     this.allTrx = globals.Transformations.filter(trx => !_.isNil(trx.process)).sort((a,b)=>a.label>b.label?1:-1);
     this.state.filteredTrxList = this.allTrx;
@@ -103,10 +95,6 @@ export default class App extends React.Component {
   render() {
     let input = this.state.input;
     let output = this.state.output;
-    if (this.state.input.length >= 200000)
-      input = this.state.input.substring(0,200000);
-    if (this.state.output.length >= 200000)
-      output = this.state.output.substring(0,200000);
       return (
         <div className="appContent">
           <div className="leftSideBar">
@@ -136,12 +124,6 @@ export default class App extends React.Component {
                 trigger={['click']}
                 overlay={
                   <Menu mode="vertical">
-                    <Menu.Item key={'get'}>
-                      Get code
-                    </Menu.Item>
-                    <Menu.Item key={'set'}>
-                      Set code
-                    </Menu.Item>
                     <Menu.Item key={'clear'}>
                       <div onClick={ e => {this.clearSelectedTrx()}}>Clear</div>
                     </Menu.Item>
@@ -167,7 +149,6 @@ export default class App extends React.Component {
             selectedTrxList={this.state.selectedTrxList}
             ref={instance => { this.myContent = instance; }}
           />
-
         </div>
     );
   }

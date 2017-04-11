@@ -1,29 +1,12 @@
 import React from 'react';
-import _ from 'lodash';
-import less from 'less';
-
-import { Input,Upload } from 'antd';
-import { Badge } from 'antd';
-import { Layout } from 'antd';
-import { Switch, Dropdown, Row, Col } from 'antd';
-import { Menu, Icon } from 'antd';
-import { Affix, Button } from 'antd';
-import { DragDropContext } from 'react-dnd';
-import { DragSource } from 'react-dnd';
-import { Select } from 'antd';
 
 import MyInput from "./MyInput.jsx";
 import MyOutput from "./MyOutput.jsx";
-
 
 export default class MyContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      viewInput: true,
-      viewOutput: true,
-      wrapInput: 'pre',
-      wrapOutput: 'pre',
       input: '',
       output: ''
     };
