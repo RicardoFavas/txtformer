@@ -15,7 +15,7 @@
   },
   "main": "main.js",
   "scripts": {
-    "start": "webpack-dev-server --hot --host 0.0.0.0 --port 80"
+    "start": "webpack-dev-server --hot --host 0.0.0.0 --port 8080"
   },
   "author": "",
   "license": "ISC",
@@ -31,12 +31,13 @@
     "babel-loader": "^6.4.1",
     "babel-plugin-import": "^1.1.1",
     "file-loader": "^0.10.0",
+    "fuzzy-search": "^3.0.2",
     "lodash": "^4.17.4",
     "papaparse": "^4.1.4",
-    "react": "^15.4.2",
-    "react-dnd": "^2.3.0",
-    "react-dnd-html5-backend": "^2.3.0",
-    "react-dom": "^15.4.2",
+    "react": "^16.11.0",
+    "react-dnd": "9.3.4",
+    "react-dnd-html5-backend": "9.3.4",
+    "react-dom": "^16.11.0",
     "react-svg-loader": "^1.1.1",
     "react-tap-event-plugin": "^2.0.1",
     "url-loader": "^0.5.7",

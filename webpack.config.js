@@ -5,13 +5,14 @@ const PROJECT_PATH = __dirname;
 
 var config = {
    entry: './main.js',
+   watch: true,
    output: {
       path:path.join(__dirname, "dist/js"),
       filename: 'index.js'
    },
    devServer: {
       inline: true,
-      port: 80
+      port: 8080
    },
    module: {
       loaders: [

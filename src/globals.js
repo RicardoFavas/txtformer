@@ -117,24 +117,6 @@ const PAPA_CONFIGS = {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Transformations list
 export default {
   'Transformations':[
@@ -475,31 +457,53 @@ export default {
       'label':'CSV to SQL Insert',
       'tags':['insert','sql'],
       'hint':null,
-      'options':{'database':'','header':false,'tablename':''},
+      'options':{
+          'database':'',
+          'header':false,
+          'tablename':'',
+          'columnmame':'column',
+          'numberPattern': null,
+        },
       'optionsDialog':
         (options) => {
+          const valideateNumberPattern = (numberPattern) => {
+            console.log(numberPattern)
+            if (numberPattern === null || numberPattern === '')
+              return 'success';
+            else
+              return 'error';
+          };
           return (
-            <div>
+            <Form>
               <Form.Item label="Table name">
                 <Input defaultValue={options.tablename} onChange={e => options.tablename = e.target.value}/>
               </Form.Item>
               <Checkbox defaultChecked={options.header} onChange={e => options.header = !options.header}>Use first row as Header</Checkbox>
-            </div>
+            </Form>
           )
         },
       'process': (input,options) => {
         let papa = Papa.parse(input,{'header':options.header});
-        let lineStart = 'insert into ';
-        lineStart += options.tablename !== '' ? options.tablename : "[tablename]";
-        lineStart += ' (';
+        if (papa.data.length === 0)
+          return "";
+        
+        if (!options.header){
+          papa.meta.fields = papa.data[0].map((v,k) => '['+options.columnmame+k+']');
+        }
 
-        let result = '';
+        const genPrefix = (options,papa) => {
+          const table = options.tablename !== '' ? options.tablename : "[tablename]"
+          const columns = papa.meta.fields.join(',')
+          return "insert into "+table+" ("+columns+") values "
+        }
+
+        let prefix = genPrefix(options,papa)
+        let result = "";
         if (options.header){
-          lineStart += papa.meta.fields.join(',');
-          lineStart += ") values (";
           papa.data.forEach(
             row => {
-              result += lineStart;
+              result += prefix
+              result += "("
               result += papa.meta.fields.map(field => (field in row ? toSql(row[field],options.database) : sqlNull(options.database))).join(",");
               result += ");\n";
             }
@@ -507,9 +511,8 @@ export default {
         } else {
           papa.data.forEach(
             row => {
-              result += lineStart;
-              result += row.map((v,k) => '[col'+k+']').join(',');
-              result += ") values (";
+              result += prefix
+              result += "("
               result += row.map(v => toSql(v,options.database)).join(',');
               result += ");\n";
             }
@@ -767,13 +770,31 @@ export default {
         return hash_string(input);
       }
     },
-    {'label':'Excel to CSV','tags':['substring'],'hint':'Not implemented yet','options':{}},
     {'label':'XML to JSON','tags':[],'hint':'Not implemented yet','options':{}},
     {'label':'JSON to XML','tags':[],'hint':'Not implemented yet','options':{'ident':'\t'}},
     {'label':'Ident','tags':[],'hint':'Not implemented yet','options':{'ident':'\t'}},
     {
       'label':'TitleCase',
+      'hint': (<div><div>foo bar</div><div>Foo Bar</div></div>),
       'options':{'ignore':"a abaft about above afore after along amid among an apud as aside at atop below but by circa down for from given in into lest like mid midst minus near next of off on onto out over pace past per plus pro qua round sans save since than thru till times to under until unto up upon via vice with worth the and nor or yet so"},
+      'optionsDialog':
+      (options) => {
+        return (
+          <Form.Item label={"Ignore words"}>
+            <Input type="textarea" style={{width:600,height:200}}
+              defaultValue={options.ignore}
+              onChange={e => options.ignore = e.target.value}
+            />
+          </Form.Item>
+        )
+      },
+      'process': (input,options) => {
+        let ignore = options.ignore.split(' ').reduce((a,b)=> (a[b]=null,a),{});
+        return input
+          .split(' ')
+          .map(s => ignore[s] !== undefined ? s : s.toLowerCase().replace(/\b(\w)/g, t => t.toUpperCase()))
+          .join(' ');
+      }
     },
   ]
 }

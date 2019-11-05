@@ -34,8 +34,7 @@ export default class MyContent extends React.Component {
   render() {
     return (
       <div className="content">
-        <div className="contentHeader">
-        </div>
+        <div className="contentHeader"/>
         <div className="contentContainer">
           <MyInput
             view={this.state.viewInput}

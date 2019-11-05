@@ -8,18 +8,18 @@ import { Layout } from 'antd';
 import { Switch, Dropdown, Row, Col } from 'antd';
 import { Menu, Icon } from 'antd';
 import { Affix, Button } from 'antd';
-import { DragDropContext } from 'react-dnd';
-import { DragSource } from 'react-dnd';
 import { Select } from 'antd';
-
+import FuzzySearch from 'fuzzy-search';
 
 import globals from './../globals.js';
 import Trx from "./Trx.jsx";
 import MyInput from "./MyInput.jsx";
 import MyOutput from "./MyOutput.jsx";
 import MyContent from "./MyContent.jsx";
-
 import './App.less';
+
+import { DndProvider } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -27,23 +27,19 @@ export default class App extends React.Component {
     this.state = {
       filterText:'',
       filteredTrxList: [],
-      selectedTrxList: []
+      selectedTrxList: [],
     }
     this.allTrx = globals.Transformations.filter(trx => !_.isNil(trx.process)).sort((a,b)=>a.label>b.label?1:-1);
     this.state.filteredTrxList = this.allTrx;
+    this.state.filteredTrxList = this.state.filteredTrxList.map(trx => { trx.id = trx.label; return trx; });
   }
 
   updateFilteredTrxList(filterText){
-    filterText = filterText.trim().toLowerCase();
-    let items = this.allTrx.filter(
-      v => {
-         let tags = [v.label];
-         if (_.isArray(v.tags))
-           tags = tags.concat(v.tags);
-         return tags.some(tag => tag.toLowerCase().indexOf(filterText) !== -1);
-       }
-     );
-
+    const searcher = new FuzzySearch(this.allTrx, ['label','tags'], {
+      caseSensitive: false,
+      sort: true
+    });
+    let items = searcher.search(filterText);
     this.setState({'filterText':filterText,'filteredTrxList':items});
   }
 
@@ -92,10 +88,13 @@ export default class App extends React.Component {
     this.myContent.updateOutput();
   }
 
+
+  
   render() {
     let input = this.state.input;
     let output = this.state.output;
       return (
+        <DndProvider backend={HTML5Backend}>
         <div className="appContent">
           <div className="leftSideBar">
             <div className="trxSelectionLabel">Selected Formatters</div>
@@ -150,6 +149,7 @@ export default class App extends React.Component {
             ref={instance => { this.myContent = instance; }}
           />
         </div>
+      </DndProvider>
     );
   }
 }

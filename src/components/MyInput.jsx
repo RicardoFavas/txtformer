@@ -11,6 +11,8 @@ import { Affix, Button } from 'antd';
 import { DragDropContext } from 'react-dnd';
 import { DragSource } from 'react-dnd';
 import { Select } from 'antd';
+import { Tooltip } from 'antd';
+
 
 export default class MyInput extends React.Component {
   constructor(props) {
@@ -40,10 +42,16 @@ export default class MyInput extends React.Component {
             action={''}
             customRequest={e => this.handleUploadFile(e.file)}
           >
-            <Icon type="upload" className="upload"/>
+            <Tooltip placement="top" title="Upload file">
+              <Icon type="upload" className="upload"/>
+            </Tooltip>
           </Upload>
-          <Icon type="swap" className="wrapInput" onClick={e => this.setState({'wrap':{'pre-wrap':'pre','pre':'pre-wrap'}[this.state.wrap]})}/>
-          <Icon type={this.state.view?"eye":"eye-o"} className="viewInput" onClick={e => this.setState({'view':!this.state.view})}/>
+          <Tooltip placement="top" title="Word wrap">
+            <Icon type="swap" className="wrapInput" onClick={e => this.setState({'wrap':{'pre-wrap':'pre','pre':'pre-wrap'}[this.state.wrap]})}/>
+           </Tooltip>
+           <Tooltip placement="top" title="Preview">           
+             <Icon type={this.state.view?"eye":"eye-o"} className="viewInput" onClick={e => this.setState({'view':!this.state.view})}/>
+           </Tooltip>
         </header>
         {
           this.state.view ?
@@ -51,7 +59,7 @@ export default class MyInput extends React.Component {
             className="input"
             style={{'whiteSpace':this.state.wrap}}
             value={this.props.text}
-            placeholder="Yout input goes here"
+            placeholder="Your input goes here"
             onChange={e => { this.props.updateInput(e.target.value);}}
           />
           :

@@ -11,6 +11,7 @@ import { Affix, Button } from 'antd';
 import { DragDropContext } from 'react-dnd';
 import { DragSource } from 'react-dnd';
 import { Message, Select } from 'antd';
+import { Tooltip } from 'antd';
 
 
 export default class MyOutput extends React.Component {
@@ -52,10 +53,18 @@ export default class MyOutput extends React.Component {
       <div className="outputContainer">
         <header>
           <label className="outputLabel">Output</label>
-          <Icon type="download" className="download" onClick={e => this.hanbdleClickDownload(_.now()+'.txt',this.props.text)}/>
-          <Icon type="copy" className="copy" onClick={e => this.handleClickCopy(this.props.text) }/>
-          <Icon type="swap" className="wrapOutput" onClick={e => this.setState({'wrap':{'pre-wrap':'pre','pre':'pre-wrap'}[this.state.wrap]})}/>
-          <Icon type={this.state.view?"eye":"eye-o"} className="viewOutput" onClick={e => this.setState({'view':!this.state.view})}/>
+          <Tooltip placement="top" title="Download">
+            <Icon type="download" className="download" onClick={e => this.hanbdleClickDownload(_.now()+'.txt',this.props.text)}/>
+          </Tooltip>
+          <Tooltip placement="top" title="Copy">
+            <Icon type="copy" className="copy" onClick={e => this.handleClickCopy(this.props.text) }/>
+          </Tooltip>
+          <Tooltip placement="top" title="Word wrap">
+            <Icon type="swap" className="wrapOutput" onClick={e => this.setState({'wrap':{'pre-wrap':'pre','pre':'pre-wrap'}[this.state.wrap]})}/>
+          </Tooltip>
+          <Tooltip placement="top" title="Preview">
+            <Icon type={this.state.view?"eye":"eye-o"} className="viewOutput" onClick={e => this.setState({'view':!this.state.view})}/>
+          </Tooltip>
         </header>
         {
           this.state.view ?
@@ -63,7 +72,7 @@ export default class MyOutput extends React.Component {
               className="output"
               style={{'whiteSpace':this.state.wrap}}
               value={this.props.text}
-              placeholder="Yout input goes here"
+              placeholder="here's the result"
               readOnly={true}
             />
           : <div className="nopreview"></div>
