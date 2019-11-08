@@ -17,21 +17,27 @@ import MyInput from "./MyInput.jsx";
 import MyOutput from "./MyOutput.jsx";
 import MyContent from "./MyContent.jsx";
 import './App.less';
+import FilteredTrxList from './FilteredTrxList.jsx';
+import SelectedTrxList from './SelectedTrxList.jsx';
 
-import { DndProvider } from 'react-dnd';
+import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
-export default class App extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       filterText:'',
       filteredTrxList: [],
       selectedTrxList: [],
-    }
-    this.allTrx = globals.Transformations.filter(trx => !_.isNil(trx.process)).sort((a,b)=>a.label>b.label?1:-1);
+    };
+    
+    this.allTrx = globals.Transformations
+      .filter(trx => !_.isNil(trx.process))
+      .sort((a,b)=>a.label>b.label?1:-1)
+      .map((trx) => { trx.id = _.uniqueId('id_'); return trx; });
+
     this.state.filteredTrxList = this.allTrx;
-    this.state.filteredTrxList = this.state.filteredTrxList.map(trx => { trx.id = trx.label; return trx; });
   }
 
   updateFilteredTrxList(filterText){
@@ -43,17 +49,20 @@ export default class App extends React.Component {
     this.setState({'filterText':filterText,'filteredTrxList':items});
   }
 
-  addSelectedTrx(label){
-    this.allTrx.filter(trx => trx.label == label).map(
-      trx => this.state.selectedTrxList.push(_.cloneDeep(trx))
+  addSelectedTrx(id){
+    this.allTrx.filter(trx => trx.id === id).map(
+      trx => {
+        let newTrx = _.cloneDeep(trx);
+        newTrx.id = _.uniqueId('id_');
+        this.state.selectedTrxList.push(newTrx);
+      }
     );
     this.setState({'selectedTrxList':this.state.selectedTrxList});
     this.updateOutput();
   }
 
-  removeSelectedTrx(index){
-    this.state.selectedTrxList.splice(index,1);
-    this.setState({'selectedTrxList':this.state.selectedTrxList});
+  removeSelectedTrx(id){    
+    this.setState({'selectedTrxList':this.state.selectedTrxList.filter(trx => trx.id !== id)});
     this.updateOutput();
   }
   demoteSelectedTrx(index){
@@ -65,10 +74,6 @@ export default class App extends React.Component {
     this.setState({'selectedTrxList':this.state.selectedTrxList});
     this.updateOutput();
   }
-  clearSelectedTrx(){
-    this.setState({'selectedTrxList':[]});
-    this.updateOutput();
-  }
   premoteSelectedTrx(index){
     if (index+1 >= this.state.selectedTrxList.length)
       return;
@@ -78,78 +83,90 @@ export default class App extends React.Component {
     this.setState({'selectedTrxList':this.state.selectedTrxList});
     this.updateOutput();
   }
-  changeOptionsTrx(index,options){
-    let trx = this.state.selectedTrxList[index];
-    trx.options = options;
-    this.setState({'selectedTrxList':this.state.selectedTrxList});
+
+  clearSelectedTrx(){
+    this.setState({'selectedTrxList':[]});
     this.updateOutput();
   }
+
   updateOutput(){
     this.myContent.updateOutput();
   }
 
+  changeOptionsTrx(index,options){
+    let trx = this.state.selectedTrxList[index];
+    trx.options = options;
+    this.setState({'selectedTrxList':_.clone(this.state.selectedTrxList)});
+    this.updateOutput();
+  }
 
-  
+
+  handleDnD(event, props, monitor, component){
+    console.log("DRAG EVENT -> "+event);
+
+    if (event === 'hover'){
+
+    }
+
+    if (event === 'beginDrag'){
+      this.setState({glow:true})
+    }
+
+    if (event === 'endDrag'){
+      let trx = monitor.getItem();
+      if (monitor.didDrop()){
+        this.addSelectedTrx(trx.id);
+      } else {
+        this.removeSelectedTrx(trx.id);
+      }
+      this.setState({glow:false})
+    }
+
+    if (event === 'drop'){
+      
+    }
+
+    
+
+  }
+
   render() {
     let input = this.state.input;
     let output = this.state.output;
       return (
-        <DndProvider backend={HTML5Backend}>
         <div className="appContent">
           <div className="leftSideBar">
             <div className="trxSelectionLabel">Selected Formatters</div>
-            <ul className="trxSelection">
-              {
-                this.state.selectedTrxList.map(
-                  (v,k) =>
-                  <Trx
-                    key={k} index={k} label={v.label}
-                    removeSelectedTrx={this.removeSelectedTrx.bind(this)}
-                    premoteSelectedTrx={this.premoteSelectedTrx.bind(this)}
-                    demoteSelectedTrx={this.demoteSelectedTrx.bind(this)}
-                    options={_.cloneDeep(v.options)}
-                    optionsDialog={v.optionsDialog}
-                    changeOptionsTrx={this.changeOptionsTrx.bind(this)}
-                  />
-                )
-              }
-            </ul>
+          
+           <SelectedTrxList 
+              glow={this.state.glow}
+              selectedTrxList={this.state.selectedTrxList}
+              removeSelectedTrx={this.removeSelectedTrx.bind(this)}
+              premoteSelectedTrx={this.premoteSelectedTrx.bind(this)}
+              demoteSelectedTrx={this.demoteSelectedTrx.bind(this)}
+              changeOptionsTrx={this.changeOptionsTrx.bind(this)}
+              handleDnD={this.handleDnD.bind(this)}
+            />
             <div className="trxSearchBox">
               <Input.Search
                 placeholder="Search"
                 onChange={e=>this.updateFilteredTrxList(e.target.value)}
               />
-              <Dropdown
-                trigger={['click']}
-                overlay={
-                  <Menu mode="vertical">
-                    <Menu.Item key={'clear'}>
-                      <div onClick={ e => {this.clearSelectedTrx()}}>Clear</div>
-                    </Menu.Item>
-                  </Menu>
-              }>
-              <Icon type="star-o" style={{'width':'40px','fontSize':'20px'}}/>
-              </Dropdown>
             </div>
-            <ul className="trxList">
-              {
-                this.state.filteredTrxList.map(
-                  (v,k) =>
-                  <Trx
-                    key={k} index={k}
-                    label={v.label} hint={v.hint}
-                    addSelectedTrx={this.addSelectedTrx.bind(this)}
-                  />
-                )
-              }
-            </ul>
+            <FilteredTrxList 
+              filteredTrxList={this.state.filteredTrxList}
+              addSelectedTrx={this.addSelectedTrx.bind(this)}
+              handleDnD={this.handleDnD.bind(this)}
+            />
           </div>
           <MyContent
             selectedTrxList={this.state.selectedTrxList}
             ref={instance => { this.myContent = instance; }}
           />
         </div>
-      </DndProvider>
     );
   }
 }
+
+
+export default DragDropContext(HTML5Backend)(App);
