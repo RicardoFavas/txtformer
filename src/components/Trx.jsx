@@ -10,7 +10,7 @@ import { Icon } from 'antd';
 import { Modal, Button } from 'antd';
 import { Tooltip } from 'antd';
 
-import { DragSource } from 'react-dnd';
+import { DragSource, DropTarget } from 'react-dnd';
 
 
 
@@ -77,27 +77,50 @@ class Trx extends React.Component {
         )
       }
 
-      const { isDragging, connectDragSource, spec } = this.props;
-      return connectDragSource(
-        <li className="trx">
-          {plusBtn}
-          {minusBtn}
-          <span className="trxLabel"> {this.props.label} </span>
-          {optionsBtn}
-          <span className="premoteDemote">
-            {premoteBtn}
-            {demoteBtn}
-          </span>
-          {modal}
-          {hintBtn}
-        </li>
+      const { isDragging, connectDragSource, connectDropTarget, hovered, spec } = this.props;
+
+      return connectDropTarget(
+          connectDragSource(
+          <li className="trx">
+            {plusBtn}
+            {minusBtn}
+            <span className="trxLabel"> {this.props.label} </span>
+            {optionsBtn}
+            <span className="premoteDemote">
+              {premoteBtn}
+              {demoteBtn}
+            </span>
+            {modal}
+            {hintBtn}
+          </li>
+          )
         );
       }
   }
 
 
+
   
-const spec = {
+const dropTargetSpec = {
+  canDrop(props, monitor) { return true; },
+  hover(props, monitor, component) {  
+      props.handleDnD('hover',props, monitor, component);
+   },
+  drop(props, monitor, component) {
+      props.handleDnD('drop',props, monitor, component);
+  },
+};
+const dropTargetCollect = (connect, monitor) => {
+  return {
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    isOverCurrent: monitor.isOver({ shallow: false }),
+    canDrop: monitor.canDrop(),
+    itemType: monitor.getItemType(),
+  }
+};
+
+const dragSourceSpec = {
   beginDrag(props, monitor, component){
     props.handleDnD('beginDrag',props, monitor, component);
     return props;
@@ -106,11 +129,11 @@ const spec = {
     props.handleDnD('endDrag',props, monitor, component);
   },
   isDragging(props, monitor){
-    //props.handleDnD('isDragging',props, monitor);
+    props.handleDnD('isDragging',props, monitor);
   }
 };
 
-const collect = (connect,monitor) => {
+const dragSourceCollect = (connect,monitor) => {
   return {
     connectDragSource: connect.dragSource(),
     connectDragPreview: connect.dragPreview(),
@@ -119,4 +142,8 @@ const collect = (connect,monitor) => {
 }
 
 
-export default DragSource('trx', spec, collect)(Trx);
+export default 
+  DropTarget('trx', dropTargetSpec, dropTargetCollect)
+    (DragSource('trx', dragSourceSpec, dragSourceCollect)
+      (Trx)
+    )

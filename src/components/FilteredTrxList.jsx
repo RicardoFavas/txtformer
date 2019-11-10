@@ -19,6 +19,7 @@ class FilteredTrxList extends React.Component {
                 index={k}
                 id={v.id}
                 label={v.label} 
+                type={v.type}
                 hint={v.hint}
                 handleDnD={this.props.handleDnD}
                 addSelectedTrx={this.props.addSelectedTrx}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom'
 import _ from 'lodash';
 import less from 'less';
 
@@ -35,7 +36,7 @@ class App extends React.Component {
     this.allTrx = globals.Transformations
       .filter(trx => !_.isNil(trx.process))
       .sort((a,b)=>a.label>b.label?1:-1)
-      .map((trx) => { trx.id = _.uniqueId('id_'); return trx; });
+      .map((trx) => { trx.id = _.uniqueId('id_'); trx.type = 'trx'; return trx; });
 
     this.state.filteredTrxList = this.allTrx;
   }
@@ -54,6 +55,7 @@ class App extends React.Component {
       trx => {
         let newTrx = _.cloneDeep(trx);
         newTrx.id = _.uniqueId('id_');
+        newTrx.type = 'selectedTrx';
         this.state.selectedTrxList.push(newTrx);
       }
     );
@@ -61,8 +63,9 @@ class App extends React.Component {
     this.updateOutput();
   }
 
-  removeSelectedTrx(id){    
-    this.setState({'selectedTrxList':this.state.selectedTrxList.filter(trx => trx.id !== id)});
+  removeSelectedTrx(index){    
+    this.state.selectedTrxList.splice(index,1)
+    this.setState({'selectedTrxList':this.state.selectedTrxList});
     this.updateOutput();
   }
   demoteSelectedTrx(index){
@@ -100,31 +103,61 @@ class App extends React.Component {
     this.updateOutput();
   }
 
+  shiftSelectedTrx(from_index,to_index){
+    let from_trx = this.state.selectedTrxList[from_index];
+    let to_trx = this.state.selectedTrxList[to_index];
+
+    this.state.selectedTrxList.splice(from_index,1)
+    this.state.selectedTrxList.splice(to_index,0,from_trx)
+    this.setState({'selectedTrxList':this.state.selectedTrxList})
+    this.updateOutput();
+  }
 
   handleDnD(event, props, monitor, component){
-    console.log("DRAG EVENT -> "+event);
+    let from_type = monitor.getItem() && monitor.getItem().type
+    let from_index = monitor.getItem() && monitor.getItem().index
+    let from_id = monitor.getItem() && monitor.getItem().id
+    let to_index = props.index
+    let to_type = props.type
+    let to_id = props.id
 
-    if (event === 'hover'){
-
-    }
-
-    if (event === 'beginDrag'){
-      this.setState({glow:true})
-    }
-
-    if (event === 'endDrag'){
-      let trx = monitor.getItem();
-      if (monitor.didDrop()){
-        this.addSelectedTrx(trx.id);
-      } else {
-        this.removeSelectedTrx(trx.id);
-      }
-      this.setState({glow:false})
-    }
-
-    if (event === 'drop'){
+    if (event === 'isDragging'){
       
-    }
+    } else if (event === 'hover'){
+      if ( !monitor.isOver({ shallow: true }) )
+        return
+      
+
+    } else if (event === 'beginDrag'){
+      this.setState({glow:true})
+    } else if (event === 'endDrag'){
+      
+      this.setState({glow:false})
+      if (!monitor.didDrop()){
+        if (from_type === 'selectedTrx')
+          this.removeSelectedTrx(from_index);
+      }
+    } else if (event === 'drop'){
+      this.setState({glow:false})
+
+      if ( !monitor.isOver({ shallow: true }) )
+        return;
+
+
+
+      if (from_type === 'trx' && to_type == null){ //adiciona ah lista dos seleionados
+        this.addSelectedTrx(from_id);
+      } else if (from_type === 'selectedTrx' && to_type === 'trx'){  //remove da lista dos selecionados
+        this.removeSelectedTrx(from_index);
+      } else if (from_type === 'selectedTrx' && to_type === 'selectedTrx'){  //replace
+      }
+
+
+
+
+      
+
+   }
 
     
 
@@ -136,7 +169,7 @@ class App extends React.Component {
       return (
         <div className="appContent">
           <div className="leftSideBar">
-            <div className="trxSelectionLabel">Selected Formatters</div>
+            <div className="trxSelectionLabel">Transformations</div>
           
            <SelectedTrxList 
               glow={this.state.glow}

@@ -34,6 +34,7 @@ class SelectedTrxList extends React.Component {
                             index={k}
                             id={v.id}
                             label={v.label}
+                            type = {v.type}
                             removeSelectedTrx={this.props.removeSelectedTrx}
                             premoteSelectedTrx={this.props.premoteSelectedTrx}
                             demoteSelectedTrx={this.props.demoteSelectedTrx}
