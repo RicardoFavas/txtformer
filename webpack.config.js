@@ -11,8 +11,7 @@ var config = {
       filename: 'index.js'
    },
    devServer: {
-      inline: true,
-      port: 8080
+      inline: true
    },
    module: {
       loaders: [
