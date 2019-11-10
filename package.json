@@ -23,13 +23,15 @@
     "less": "^2.7.2",
     "css-loader": "^0.26.1",
     "style-loader": "^0.13.1",
-    "less-loader": "^2.2.3"
-  },
-  "dependencies": {
-    "antd": "^2.9.0",
+    "less-loader": "^2.2.3",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
-    "babel-plugin-import": "^1.12.2",
+    "babel-plugin-import": "^1.12.2"
+  },
+  "dependencies": {
+    "antd": "^2.13.11",
     "file-loader": "^0.10.0",
     "fuzzy-search": "^3.0.2",
     "lodash": "^4.17.4",
@@ -40,8 +42,6 @@
     "react-dom": "^16.11.0",
     "react-svg-loader": "^1.1.1",
     "react-tap-event-plugin": "^2.0.1",
-    "url-loader": "^0.5.7",
-    "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.4.1"
+    "url-loader": "^0.5.7"
   }
 }
