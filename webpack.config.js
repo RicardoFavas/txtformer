@@ -11,7 +11,8 @@ var config = {
       filename: 'index.js'
    },
    devServer: {
-      inline: true
+      inline: true,
+      https: true
    },
    module: {
       loaders: [
