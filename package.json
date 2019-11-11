@@ -28,7 +28,7 @@
     "less-loader": "^2.2.3",
     "style-loader": "^0.13.1",
     "webpack": "^2.2.1",
-    "webpack-dev-server": "^2.11.5"
+    "webpack-dev-server": "^3.1.11"
   },
   "dependencies": {
     "antd": "^2.13.11",
