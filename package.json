@@ -34,7 +34,7 @@
     "antd": "^2.13.11",
     "file-loader": "^0.10.0",
     "fuzzy-search": "^3.0.2",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "papaparse": "^4.1.4",
     "react": "^16.11.0",
     "react-dnd": "^3.0.2",
